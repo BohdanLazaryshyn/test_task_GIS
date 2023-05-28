@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
+    "rest_framework_gis",
+    "django.contrib.gis",
+    "places_api",
 ]
 
 MIDDLEWARE = [
@@ -76,11 +80,16 @@ WSGI_APPLICATION = "Test_task.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'test_GIS',
+        'USER': 'postgres',
+        'PASSWORD': 'admin',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
+GDAL_LIBRARY_PATH = "C:/OSGeo4W/bin/gdal307.dll"
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
