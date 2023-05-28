@@ -2,8 +2,9 @@ from django.contrib.gis.db.models.functions import Distance
 from django.contrib.gis.geos import Point
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.viewsets import GenericViewSet
 
 from places_api.models import Place
 from places_api.serializers import (
@@ -31,20 +32,7 @@ class PlaceViewSet(viewsets.ModelViewSet):
         return PlaceSerializer
 
 
-class NearestPlaceView(viewsets.ReadOnlyModelViewSet):
-    queryset = Place.objects.all()
-    serializer_class = PlaceDetailSerializer
-
-    def get_queryset(self):
-        lat = self.request.query_params.get("lat")
-        lng = self.request.query_params.get("lng")
-        if lat and lng:
-            point = Point(float(lng), float(lat), srid=4326)
-            queryset = Place.objects.annotate(distance=Distance("geom", point)).order_by("distance")[0:1]
-            return queryset
-        return Place.objects.none()
-
-    @extend_schema(
+@extend_schema(
         parameters=[
             OpenApiParameter(
                 name="lat",
@@ -61,7 +49,21 @@ class NearestPlaceView(viewsets.ReadOnlyModelViewSet):
                 type=OpenApiTypes.NUMBER,
             ),
         ],
+        description="Returns the nearest place to the target location.",
         responses={200: PlaceSerializer},
     )
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
+class NearestPlaceView(
+    mixins.ListModelMixin,
+    GenericViewSet
+):
+    queryset = Place.objects.all()
+    serializer_class = PlaceDetailSerializer
+
+    def get_queryset(self):
+        lat = self.request.query_params.get("lat")
+        lng = self.request.query_params.get("lng")
+        if lat and lng:
+            point = Point(float(lng), float(lat), srid=4326)
+            queryset = Place.objects.annotate(distance=Distance("geom", point)).order_by("distance")[0:1]
+            return queryset
+        return Place.objects.none()
