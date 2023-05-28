@@ -139,7 +139,11 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "Place API",
-    "DESCRIPTION": "API for places with GIS",
+    "DESCRIPTION":
+        "API for locations with coordinates. The following technologies "
+        "are used here: Python, PostgreSQL, PostGIS, Django, and GeoDjango. "
+        "This documentation provides information about all available endpoints "
+        "and instructions on how to use them.",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
     "SWAGGER_UI_SETTINGS": {

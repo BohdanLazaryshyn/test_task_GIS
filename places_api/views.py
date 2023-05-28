@@ -19,6 +19,10 @@ class PlacePagination(PageNumberPagination):
     max_page_size = 1000
 
 
+@extend_schema(
+    description="In this endpoint, you can see all available places in your database. "
+                "There is pagination here, so to go to another page, enter the page number.",
+)
 class PlaceViewSet(viewsets.ModelViewSet):
     queryset = Place.objects.all()
     serializer_class = PlaceSerializer
@@ -30,6 +34,41 @@ class PlaceViewSet(viewsets.ModelViewSet):
         elif self.action == "retrieve":
             return PlaceDetailSerializer
         return PlaceSerializer
+
+    @extend_schema(
+        description="Here you create a new place with coordinates. "
+                    "To do this, write the following elements in the dictionary: name, description and coordinates",
+    )
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
+    @extend_schema(
+        description="In this endpoint, you can find detailed information about a specific place by ID. "
+                    "To do this, enter the ID in the search field.",
+    )
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
+    @extend_schema(
+        description="In this endpoint, you have the option to Update information about an "
+                    "existing location. Enter the ID of the place and the new information for it.",
+    )
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+
+    @extend_schema(
+        description="In this endpoint, you have the option to Update information about "
+                    "an existing location. Enter the ID of the place and the new information for it.",
+    )
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+
+    @extend_schema(
+        description="Іn this endpoint you have the option to delete a "
+                    "place from the database by the specified ID",
+    )
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
 
 
 @extend_schema(
@@ -49,7 +88,9 @@ class PlaceViewSet(viewsets.ModelViewSet):
                 type=OpenApiTypes.NUMBER,
             ),
         ],
-        description="Returns the nearest place to the target location.",
+        description="On this endpoint,ou can search for the nearest location from your database using coordinates. "
+                    "Please enter the latitude in the 'lat' field and the longitude in the 'lng' field."
+                    ,
         responses={200: PlaceSerializer},
     )
 class NearestPlaceView(
