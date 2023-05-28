@@ -1,5 +1,7 @@
 from django.contrib.gis.db.models.functions import Distance
 from django.contrib.gis.geos import Point
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
 
@@ -41,3 +43,25 @@ class NearestPlaceView(viewsets.ReadOnlyModelViewSet):
             queryset = Place.objects.annotate(distance=Distance("geom", point)).order_by("distance")[0:1]
             return queryset
         return Place.objects.none()
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="lat",
+                required=True,
+                location=OpenApiParameter.QUERY,
+                description="Latitude of the target location.",
+                type=OpenApiTypes.NUMBER,
+            ),
+            OpenApiParameter(
+                name="lng",
+                required=True,
+                location=OpenApiParameter.QUERY,
+                description="Longitude of the target location.",
+                type=OpenApiTypes.NUMBER,
+            ),
+        ],
+        responses={200: PlaceSerializer},
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
