@@ -1,3 +1,5 @@
+from django.contrib.gis.db.models.functions import Distance
+from django.contrib.gis.geos import Point
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
 
@@ -25,3 +27,17 @@ class PlaceViewSet(viewsets.ModelViewSet):
         elif self.action == "retrieve":
             return PlaceDetailSerializer
         return PlaceSerializer
+
+
+class NearestPlaceView(viewsets.ReadOnlyModelViewSet):
+    queryset = Place.objects.all()
+    serializer_class = PlaceDetailSerializer
+
+    def get_queryset(self):
+        lat = self.request.query_params.get("lat")
+        lng = self.request.query_params.get("lng")
+        if lat and lng:
+            point = Point(float(lng), float(lat), srid=4326)
+            queryset = Place.objects.annotate(distance=Distance("geom", point)).order_by("distance")[0:1]
+            return queryset
+        return Place.objects.none()
