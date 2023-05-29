@@ -29,4 +29,3 @@ class PlaceDetailSerializer(PlaceSerializer):
     class Meta:
         model = Place
         fields = ("id", "name", "description", "coordinates")
-

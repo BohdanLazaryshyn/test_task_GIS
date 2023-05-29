@@ -90,9 +90,9 @@ class PlaceViewSet(viewsets.ModelViewSet):
                 type=OpenApiTypes.NUMBER,
             ),
         ],
-        description="On this endpoint,ou can search for the nearest location from your database using coordinates. "
-                    "Please enter the latitude in the 'lat' field and the longitude in the 'lng' field."
-                    ,
+        description="On this endpoint,ou can search for the nearest location "
+                    "from your database using coordinates. "
+                    "Please enter the latitude in the 'lat' field and the longitude in the 'lng' field.",
         responses={200: PlaceSerializer},
     )
 class NearestPlaceView(
@@ -101,20 +101,26 @@ class NearestPlaceView(
 ):
     serializer_class = PlaceDetailSerializer
 
-    def get_queryset(self):
-        lat = self.request.query_params.get("lat")
-        lng = self.request.query_params.get("lng")
+    @staticmethod
+    def validation_coordinates(lat, lng):
         try:
             lat = float(lat)
             lng = float(lng)
             if not (-90.0 <= lat <= 90.0) or not (-180.0 <= lng <= 180.0):
                 raise ValidationError(
-                    "Invalid coordinates. Latitude and longitude "
-                    "values should be within the range of -180.0 to 180.0"
+                    "Invalid coordinates. "
+                    "Latitude should be within the range of -90.0 to 90.0. "
+                    "Longitude should be within the range of -180.0 to 180.0"
                 )
         except (TypeError, ValueError):
             raise ValidationError("Invalid coordinates")
 
-        point = Point(lng, lat, srid=4326)
-        queryset = Place.objects.annotate(distance=Distance("geom", point)).order_by("distance")[0:1]
-        return queryset
+    def get_queryset(self):
+        lat = self.request.query_params.get("lat")
+        lng = self.request.query_params.get("lng")
+
+        self.validation_coordinates(lat, lng)
+
+        point = Point(float(lat), float(lng), srid=4326)
+        nearest_place = Place.objects.annotate(distance=Distance("geom", point)).order_by("distance")[0:1]
+        return nearest_place
