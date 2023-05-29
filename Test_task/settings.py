@@ -68,17 +68,13 @@ WSGI_APPLICATION = "Test_task.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.contrib.gis.db.backends.postgis",
-        "NAME": os.environ["POSTGRES_NAME"],
+        "NAME": os.environ["POSTGRES_DB"],
         "USER": os.environ["POSTGRES_USER"],
         "PASSWORD": os.environ["POSTGRES_PASSWORD"],
         "HOST": os.environ["POSTGRES_HOST"],
         "PORT": os.environ["POSTGRES_PORT"],
     }
 }
-
-GDAL_LIBRARY_PATH = "C:/OSGeo4W/bin/gdal307.dll"
-
-# GDAL_LIBRARY_PATH = "C:/OSGeo4W/bin/gdal307.dll"
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

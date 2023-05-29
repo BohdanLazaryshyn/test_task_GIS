@@ -26,7 +26,7 @@ create .env file in root directory with following variables
 SECRET_KEY=SECRET_KEY
 
 POSTGRES_HOST=POSTGRES_HOST
-POSTGRES_NAME=POSTGRES_HOST
+POSTGRES_DB=POSTGRES_DB
 POSTGRES_USER=POSTGRES_HOST
 POSTGRES_PASSWORD=POSTGRES_HOST
 POSTGRES_PORT=POSTGRES_HOST
@@ -39,6 +39,11 @@ python manage.py migrate
 docker-compose build
 docker-compose up
 ```
+## The address in use
+```
+127.0.0.1:8000/api/
+```
+***
 Features:
 - Swagger(OpenAPI) documentation
 - CRUD operations with geospatial data
