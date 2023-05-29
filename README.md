@@ -9,7 +9,7 @@ The following technologies were used for implementation:
 - PostGIS
 - Swagger(OpenAPI)
 ***
-### Preparation for project launch
+### Preparation for project launch (without Docker
 Install PostgresSQL, PostGIS and create a db before these steps
 ```
 - Write in Git Bash

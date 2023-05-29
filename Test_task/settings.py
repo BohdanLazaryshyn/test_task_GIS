@@ -76,6 +76,8 @@ DATABASES = {
     }
 }
 
+GDAL_LIBRARY_PATH = "C:/OSGeo4W/bin/gdal307.dll"
+
 # GDAL_LIBRARY_PATH = "C:/OSGeo4W/bin/gdal307.dll"
 
 # Password validation
