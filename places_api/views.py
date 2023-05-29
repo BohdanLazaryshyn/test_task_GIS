@@ -122,5 +122,5 @@ class NearestPlaceView(
         self.validation_coordinates(lat, lng)
 
         point = Point(float(lat), float(lng), srid=4326)
-        nearest_place = Place.objects.annotate(distance=Distance("geom", point)).order_by("distance")[0:1]
+        nearest_place = Place.objects.annotate(distance=Distance("geom", point)).order_by("distance").first()
         return nearest_place
