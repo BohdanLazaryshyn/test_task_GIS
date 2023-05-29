@@ -3,6 +3,7 @@ from django.contrib.gis.geos import Point
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, mixins
+from rest_framework.exceptions import ValidationError
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import GenericViewSet
 
@@ -37,7 +38,8 @@ class PlaceViewSet(viewsets.ModelViewSet):
 
     @extend_schema(
         description="Here you create a new place with coordinates. "
-                    "To do this, write the following elements in the dictionary: name, description and coordinates",
+                    "To do this, write the following elements in the dictionary: "
+                    "name, description and coordinates",
     )
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
@@ -97,14 +99,22 @@ class NearestPlaceView(
     mixins.ListModelMixin,
     GenericViewSet
 ):
-    queryset = Place.objects.all()
     serializer_class = PlaceDetailSerializer
 
     def get_queryset(self):
         lat = self.request.query_params.get("lat")
         lng = self.request.query_params.get("lng")
-        if lat and lng:
-            point = Point(float(lng), float(lat), srid=4326)
-            queryset = Place.objects.annotate(distance=Distance("geom", point)).order_by("distance")[0:1]
-            return queryset
-        return Place.objects.none()
+        try:
+            lat = float(lat)
+            lng = float(lng)
+            if not (-90.0 <= lat <= 90.0) or not (-180.0 <= lng <= 180.0):
+                raise ValidationError(
+                    "Invalid coordinates. Latitude and longitude "
+                    "values should be within the range of -180.0 to 180.0"
+                )
+        except (TypeError, ValueError):
+            raise ValidationError("Invalid coordinates")
+
+        point = Point(lng, lat, srid=4326)
+        queryset = Place.objects.annotate(distance=Distance("geom", point)).order_by("distance")[0:1]
+        return queryset
