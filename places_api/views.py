@@ -38,7 +38,8 @@ class PlaceViewSet(viewsets.ModelViewSet):
 
     @extend_schema(
         description="Here you create a new place with coordinates. "
-                    "To do this, write the following elements in the dictionary: name, description and coordinates",
+                    "To do this, write the following elements in the dictionary: "
+                    "name, description and coordinates",
     )
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
@@ -98,7 +99,6 @@ class NearestPlaceView(
     mixins.ListModelMixin,
     GenericViewSet
 ):
-    queryset = Place.objects.all()
     serializer_class = PlaceDetailSerializer
 
     def get_queryset(self):
@@ -107,9 +107,10 @@ class NearestPlaceView(
         try:
             lat = float(lat)
             lng = float(lng)
-            if not (-180.0 <= lat <= 180.0) or not (-180.0 <= lng <= 180.0):
+            if not (-90.0 <= lat <= 90.0) or not (-180.0 <= lng <= 180.0):
                 raise ValidationError(
-                    "Invalid coordinates. Latitude and longitude values should be within the range of -180.0 to 180.0"
+                    "Invalid coordinates. Latitude and longitude "
+                    "values should be within the range of -180.0 to 180.0"
                 )
         except (TypeError, ValueError):
             raise ValidationError("Invalid coordinates")
