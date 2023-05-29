@@ -40,7 +40,7 @@ docker-compose up
 ```
 ## The address in use
 ```
-127.0.0.1:8000/api/
+127.0.0.1:8000
 ```
 ***
 Features:
