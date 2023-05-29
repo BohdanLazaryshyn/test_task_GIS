@@ -35,7 +35,6 @@ POSTGRES_PORT=POSTGRES_HOST
 ## Run server with Docker
 Write in terminal
 ```
-python manage.py migrate
 docker-compose build
 docker-compose up
 ```
