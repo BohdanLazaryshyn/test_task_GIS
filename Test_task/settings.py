@@ -9,8 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-#loahc28_n+k#51#2$piu3gm1gf-m7^3mu-&lwh@#f2%w=-m*e"
-# SECRET_KEY = os.environ["SECRET_KEY"]
+SECRET_KEY = os.environ["SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -69,20 +68,15 @@ WSGI_APPLICATION = "Test_task.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.contrib.gis.db.backends.postgis",
-        "NAME": "test_GIS",
-        "USER": "postgres",
-        "PASSWORD": "admin",
-        "HOST": "localhost",
-        "PORT": "5432",
-        # "NAME": os.environ["POSTGRES_NAME"],
-        # "USER": os.environ["POSTGRES_USER"],
-        # "PASSWORD": os.environ["POSTGRES_PASSWORD"],
-        # "HOST": os.environ["POSTGRES_HOST"],
-        # "PORT": os.environ["POSTGRES_PORT"],
+        "NAME": os.environ["POSTGRES_NAME"],
+        "USER": os.environ["POSTGRES_USER"],
+        "PASSWORD": os.environ["POSTGRES_PASSWORD"],
+        "HOST": os.environ["POSTGRES_HOST"],
+        "PORT": os.environ["POSTGRES_PORT"],
     }
 }
 
-GDAL_LIBRARY_PATH = "C:/OSGeo4W/bin/gdal307.dll"
+# GDAL_LIBRARY_PATH = "C:/OSGeo4W/bin/gdal307.dll"
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
